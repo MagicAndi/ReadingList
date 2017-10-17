@@ -75,7 +75,7 @@ function showInfo(data, tabletop) {
     var image = document.createElement('img');
     var imageUrl = "https://sites.google.com/site/andyparkhill/home/book-images/" + records[i].ISBN + ".jpg";
     image.setAttribute('src', imageUrl);
-    image.setAttribute('alt', 'Book cover for...');
+    image.setAttribute('alt', 'Book cover for ' + records[i].Title + ' by ' + records[i].Author + ' (ISBN: ' + records[i].ISBN + ')');
     image.setAttribute('width', '80px');
     cell.appendChild(image);
     row.appendChild(cell);
