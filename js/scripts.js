@@ -21,27 +21,86 @@ function removeChildNodes(element) {
 }
 
 function showInfo(data, tabletop) {
-  alert('Successfully processed!')
-
   var retrievedData = document.getElementById('retrievedData');
   removeChildNodes(retrievedData);
   retrievedData.innerHTML = "";
 
-  var count = document.createElement('p');
+  var table = document.createElement('table');
+  table.id = "books";
+  var tableHeader = document.createElement('thead');
+  var tableBody = document.createElement('tbody');
+  
+  var headerRow = document.createElement('tr');
+  var columns = data["Read Books"].columnNames; 
+
+  var headerCell = document.createElement('th');
+  headerCell.innerText = "Cover";
+  headerRow.appendChild(headerCell);
+  
+  var headerCell = document.createElement('th');
+  headerCell.innerText = "Title";
+  headerRow.appendChild(headerCell);
+
+  var headerCell = document.createElement('th');
+  headerCell.innerText = "Author(s)";
+  headerRow.appendChild(headerCell);
+  
+  var headerCell = document.createElement('th');
+  headerCell.innerText = "Classification";
+  headerRow.appendChild(headerCell);
+  
+  var headerCell = document.createElement('th');
+  headerCell.innerText = "Tags";
+  headerRow.appendChild(headerCell);  
+  
+  var headerCell = document.createElement('th');
+  headerCell.innerText = "Date Read";
+  headerRow.appendChild(headerCell);
+  
+  var headerCell = document.createElement('th');
+  headerCell.innerText = "Rating";
+  headerRow.appendChild(headerCell);
+
+  var headerCell = document.createElement('th');
+  tableHeader.appendChild(headerRow);
+  table.appendChild(tableHeader);
+
   var records = data["Read Books"].elements;
-  var columns = data["Read Books"].columnNames;
-  count.innerText = "Number of records returned: " + records.length;
-  retrievedData.appendChild(count);
- 
-  var list = document.createElement('ul');
+  for (var i = 0; i < records.length; i++){
+    var row = document.createElement('tr');
 
-  for (var i = 0; i < columns.length; i++){
-    var element = document.createElement('li');
-    element.innerText = columns[i];
-    list.appendChild(element);
+    var cell = document.createElement('td');
+    var image = document.createElement('img');
+    var imageUrl = "https://sites.google.com/site/andyparkhill/home/book-images/" + records[i].ISBN + ".jpg"
+    image.setAttribute('src', imageUrl);
+    image.setAttribute('alt', 'Book cover for...');
+    image.setAttribute('width', '50px');
+    cell.appendChild(image);
+    row.appendChild(cell);
+
+    var cell = document.createElement('td');
+    row.appendChild(cell);
+    
+    var cell = document.createElement('td');
+    row.appendChild(cell);
+    
+    var cell = document.createElement('td');
+    row.appendChild(cell);
+    
+    var cell = document.createElement('td');
+    row.appendChild(cell);
+    
+    var cell = document.createElement('td');
+    row.appendChild(cell);
+    
+    var cell = document.createElement('td');
+    row.appendChild(cell);
+
+    tableBody.appendChild(row);
   }
-
-  retrievedData.appendChild(list);
+  
+  table.appendChild(tableBody);
+  retrievedData.appendChild(table);
 }
 
 window.addEventListener('DOMContentLoaded', init)
