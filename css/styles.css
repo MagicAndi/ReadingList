@@ -74,6 +74,24 @@ li:hover {
   cursor: pointer;
 }
 
+/* Content Styles */
+.wrap {
+  width: 100%;
+  overflow:auo;
+  }
+  
+.leftColumn {
+  float:left; 
+  width: 50%;
+  height: 400px;
+}
+
+.rightColumn {
+  float: right;
+  background:yellow;
+  height: 400px;
+  width: 50%;
+}
 
 /* Books
 ----------------------------------------------- */
