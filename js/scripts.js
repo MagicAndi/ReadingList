@@ -23,124 +23,163 @@ function removeChildNodes(element) {
   }
 }
 
-function BuildLeftColumn(content, records) {
+function buildLeftColumn(content, records) {
   var column = document.createElement('div');
   column.className = "leftColumn"
 
-  AddCurrentlyReading(column, records[0]);
-  AddRecentlyFinished(column, records);
+  addCurrentlyReading(column, records[0]);
+  addRecentlyFinished(column, records);
 
   content.appendChild(column);
 }
 
-function AddCurrentlyReading(column, currentBook) {
-  var header = document.createElement('h3');
-  header.innerText = "Now Reading";
-  column.appendChild(header);
+function addHeader(element, headerType, headerText) {
+  var header = document.createElement(headerType);
+  header.innerText = headerText;
+  element.appendChild(header);
+}
+
+function addCurrentlyReading(column, currentBook) {
+  addHeader(column, "h3", "Now Reading");
 
   var list = document.createElement('ul');
   var currentlyReading = document.createElement('li');
 
-  var bookImage = document.createElement('img');
-  var imageUrl = "https://sites.google.com/site/andyparkhill/home/book-images/" + currentBook.ISBN + ".jpg";
-  bookImage.setAttribute('src', imageUrl);
-  bookImage.setAttribute('alt', 'Book cover for ' + currentBook.Title + ' by ' + currentBook.Author);
-  bookImage.setAttribute('width', '50px');
-  currentlyReading.appendChild(bookImage);
-  
-  var bookTitle = document.createElement('p');
-  bookTitle.innerText = currentBook.Title
-  bookTitle.style.fontSize = "12pt";
-  bookTitle.style.fontWeight = "Bold";
-  currentlyReading.appendChild(bookTitle);
-
-  var authorDetails = document.createElement('p');
-  authorDetails.innerText = "by " + currentBook.Author;
-  currentlyReading.appendChild(authorDetails);
+  addBookImage(currentlyReading, currentBook);  
+  addBookTitle(currentlyReading, currentBook.Title);
+  addAuthor(currentlyReading, currentBook.Author);
 
   list.appendChild(currentlyReading);
   column.appendChild(list);
 }
 
-function AddRecentlyFinished(column, records) {
-  var header = document.createElement('h3');
-  header.innerText = "Recently Finished";
-  column.appendChild(header);
+function addBookImage(element, bookDetails) {
+  var image = document.createElement('img');
+  var imageUrl = "https://sites.google.com/site/andyparkhill/home/book-images/" + bookDetails.ISBN + ".jpg";
+  image.setAttribute('src', imageUrl);
+  image.setAttribute('alt', 'Book cover for ' + bookDetails.Title + ' by ' + bookDetails.Author);
+  image.setAttribute('width', '50px');
+  element.appendChild(image);
+}
 
+function addBookTitle(element, title) {
+  var bookTitle = document.createElement('p');
+  bookTitle.innerText = title;
+  bookTitle.style.fontSize = "12pt";
+  bookTitle.style.fontWeight = "Bold";
+  element.appendChild(bookTitle);
+}
+
+function addAuthor(element, author) {
+  var authorDetails = document.createElement('p');
+  authorDetails.innerText = "by " + author;
+  element.appendChild(authorDetails);
+}
+
+function addDateRead(element, date) {
+  var dateRead = document.createElement('p');
+  dateRead.innerText = "Finished reading on " + date;
+  element.appendChild(dateRead);
+}
+
+function addRating(element, rating) {
+  imageUrl = "https://sites.google.com/site/andyparkhill/home/book-images/";
+  altText = "";
+
+  switch (rating) {
+    case '1':
+        imageUrl += "1_stars.png";
+        altText += "Rated as 1 out of 5 stars";
+        break;
+    case '2':
+        imageUrl += "2_stars.png";
+        altText += "Rated as 2 out of 5 stars";
+        break;
+    case '3':
+        imageUrl += "3_stars.png";
+        altText += "Rated as 3 out of 5 stars";
+        break;
+    case '4':
+        imageUrl += "4_stars.png";
+        altText += "Rated as 4 out of 5 stars";
+        break;
+    case '5':
+        imageUrl += "5_stars.png";
+        altText += "Rated as 5 out of 5 stars";
+        break;
+    default:
+      imageUrl = "";
+      cell.innerText = "No rating";
+      console.log('Rating not set!');
+  }
+
+  if(imageUrl.length > 0) {
+    var ratingImage = document.createElement('img');
+    ratingImage.setAttribute('src', imageUrl);
+    ratingImage.setAttribute('alt', altText);
+    ratingImage.setAttribute('width', '60px');
+    element.appendChild(ratingImage);
+  }
+}
+
+function addRecentlyFinished(column, records) {
+  addHeader(column, "h3", "Recently Finished");
   var list = document.createElement('ul');
 
   for (var i = 1; i <= 10; i++){
     var element = document.createElement('li');
-    
-    var bookImage = document.createElement('img');
-    var imageUrl = "https://sites.google.com/site/andyparkhill/home/book-images/" + records[i].ISBN + ".jpg";
-    bookImage.setAttribute('src', imageUrl);
-    bookImage.setAttribute('alt', 'Book cover for ' + records[i].Title + ' by ' + records[i].Author + ' (ISBN: ' + records[i].ISBN + ')');
-    bookImage.setAttribute('width', '50px');
-    element.appendChild(bookImage);
-    
-    var bookTitle = document.createElement('p');
-    bookTitle.innerText = records[i].Title
-    bookTitle.style.fontSize = "12pt";
-    bookTitle.style.fontWeight = "Bold";
-    element.appendChild(bookTitle);
 
-    var authorDetails = document.createElement('p');
-    authorDetails.innerText = "by " + records[i].Author;
-    element.appendChild(authorDetails);
-    
-    var dateRead = document.createElement('p');
-    dateRead.innerText = "Finished reading on " + records[i].DateRead;
-    element.appendChild(dateRead);
+    addBookImage(element, records[i]);
+    addBookTitle(element, records[i].Title);
+    addAuthor(element, records[i].Author);
+    addDateRead(element, records[i].DateRead);
+    addRating(element, records[i].MyRating);          
 
-    var rating = records[i].MyRating;
-    imageUrl = "https://sites.google.com/site/andyparkhill/home/book-images/";
-    altText = "";
-
-    switch (rating) {
-      case '1':
-          imageUrl += "1_stars.png";
-          altText += "Rated as 1 out of 5 stars";
-          break;
-      case '2':
-          imageUrl += "2_stars.png";
-          altText += "Rated as 2 out of 5 stars";
-          break;
-      case '3':
-          imageUrl += "3_stars.png";
-          altText += "Rated as 3 out of 5 stars";
-          break;
-      case '4':
-          imageUrl += "4_stars.png";
-          altText += "Rated as 4 out of 5 stars";
-          break;
-      case '5':
-          imageUrl += "5_stars.png";
-          altText += "Rated as 5 out of 5 stars";
-          break;
-      default:
-        imageUrl = "";
-        cell.innerText = "No rating";
-        console.log('Rating not set!');
-    }
-
-    if(imageUrl.length > 0) {
-      var ratingImage = document.createElement('img');
-      ratingImage.setAttribute('src', imageUrl);
-      ratingImage.setAttribute('alt', altText);
-      ratingImage.setAttribute('width', '60px');
-      element.appendChild(ratingImage);
-    }
-          
     list.appendChild(element);
   }
 
   column.appendChild(list);
 }
 
-function BuildRightColumn(content, records) {
+function addRecommendedBooks(parentElement, classification, records) {
+  var maxNumberOfBooks = 6;
+
+  var highlyRatedBooks = records.filter(function(i) {
+    return i.MyRating === "5" && i.Classification === classification;
+  });
+
+  if(highlyRatedBooks.length > 0) {
+    addHeader(parentElement, "h4", classification);
+    var list = document.createElement('ul');
+
+    var booksToDisplay = maxNumberOfBooks;
+    if(maxNumberOfBooks > highlyRatedBooks.length) {
+      booksToDisplay = highlyRatedBooks.length;
+    }
+    
+    for (var i = 0; i < booksToDisplay; i++){
+      var element = document.createElement('li');
+  
+      addBookImage(element, highlyRatedBooks[i], i);
+      addBookTitle(element, highlyRatedBooks[i].Title);
+      addAuthor(element, highlyRatedBooks[i].Author);
+      addDateRead(element, highlyRatedBooks[i].DateRead);
+      addRating(element, highlyRatedBooks[i].MyRating);          
+  
+      list.appendChild(element);
+    }
+
+    parentElement.appendChild(list);
+  } 
+}
+
+function buildRightColumn(content, records) {
   var column = document.createElement('div');
   column.className = "rightColumn"
+  
+  addHeader(column, "h3", "Highly Recommended", records);
+  addRecommendedBooks(column, "Fiction", records);
+  addRecommendedBooks(column, "Non-Fiction", records);
 
   content.appendChild(column);
 }
@@ -154,8 +193,8 @@ function showInfo(data, tabletop) {
 
   if(records.length > 0)
   {    
-    BuildLeftColumn(content, records);
-    BuildRightColumn(content, records);
+    buildLeftColumn(content, records);
+    buildRightColumn(content, records);
   }
   else
   {

@@ -77,8 +77,8 @@ li:hover {
 /* Content Styles */
 .wrap {
   width: 100%;
-  overflow:auo;
-  }
+  overflow: auto;
+}
   
 .leftColumn {
   float:left; 
