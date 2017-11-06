@@ -4,7 +4,7 @@ var spreadsheetKey =
 '1ZTvkFasPlbF49jGnWqISvI_akMyL1tEGWPPTEmCc56E'
 
 var numberOfRecentlyReadBooks = 10;
-
+var numberOfRecommendedBooks = 6;
 
 function init() {
   Tabletop.init( { key: publicSpreadsheetUrl,
@@ -76,9 +76,14 @@ function addAuthor(element, author) {
   element.appendChild(authorDetails);
 }
 
-function addDateRead(element, date) {
+function addDateRead(element, date, review) {
   var dateRead = document.createElement('p');
   dateRead.innerText = "Finished reading on " + date;
+
+  if(review) {
+    dateRead.innerText += ". " + review;
+  }
+
   element.appendChild(dateRead);
 }
 
@@ -126,13 +131,13 @@ function addRecentlyFinished(column, records) {
   addHeader(column, "h3", "Recently Finished");
   var list = document.createElement('ul');
 
-  for (var i = 1; i <= 10; i++){
+  for (var i = 1; i <= numberOfRecentlyReadBooks; i++){
     var element = document.createElement('li');
 
     addBookImage(element, records[i]);
     addBookTitle(element, records[i].Title);
     addAuthor(element, records[i].Author);
-    addDateRead(element, records[i].DateRead);
+    addDateRead(element, records[i].DateRead, records[i].MyReview);
     addRating(element, records[i].MyRating);          
 
     list.appendChild(element);
@@ -141,9 +146,17 @@ function addRecentlyFinished(column, records) {
   column.appendChild(list);
 }
 
-function addRecommendedBooks(parentElement, classification, records) {
-  var maxNumberOfBooks = 6;
+function getRandomValuesFromArray(array, count){
+  var result = [];
+  var _tmp = array.slice();
+  for(var i = 0; i < count; i++){
+    var index = Math.ceil(Math.random() * 10) % _tmp.length;
+    result.push(_tmp.splice(index, 1)[0]);
+  }
+  return result;
+}
 
+function addRecommendedBooks(parentElement, classification, records) {
   var highlyRatedBooks = records.filter(function(i) {
     return i.MyRating === "5" && i.Classification === classification;
   });
@@ -152,9 +165,13 @@ function addRecommendedBooks(parentElement, classification, records) {
     addHeader(parentElement, "h4", classification);
     var list = document.createElement('ul');
 
-    var booksToDisplay = maxNumberOfBooks;
-    if(maxNumberOfBooks > highlyRatedBooks.length) {
+    var booksToDisplay = numberOfRecommendedBooks;
+    if(numberOfRecommendedBooks > highlyRatedBooks.length) {
       booksToDisplay = highlyRatedBooks.length;
+    }
+    else {
+      // Get random values from array to display
+      // highlyRatedBooks = getRandomValuesFromArray(highlyRatedBooks, numberOfRecommendedBooks);
     }
     
     for (var i = 0; i < booksToDisplay; i++){
