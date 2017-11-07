@@ -14,12 +14,26 @@
    min-height: 200px;
    float: left;
    width: 50%;
+   /* margin: 0.5em 0.5em; */
 }
 
 .leftColumn {
 }
 
 .rightColumn {
+}
+
+.container p {
+    overflow: hidden;
+}
+
+
+.left {
+  float: left;
+}
+
+.right {
+  overflow: hidden;
 }
 
 @media all and (max-width: 400px) {
