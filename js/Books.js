@@ -4,8 +4,8 @@ var Books = (function () {
 
   var settings = {
     publicSpreadsheetUrl: "https://docs.google.com/spreadsheets/d/1ZTvkFasPlbF49jGnWqISvI_akMyL1tEGWPPTEmCc56E/pubhtml",
-    numberOfRecentlyReadBooks: 10,
-    numberOfRecommendedBooks: 6
+    numberOfRecentlyReadBooks: 5,
+    numberOfRecommendedBooks: 5
   };
 
   function init() {
@@ -38,8 +38,7 @@ var Books = (function () {
     var currentlyReading = document.createElement('li');
 
     addBookImage(currentlyReading, currentBook);  
-    addBookTitle(currentlyReading, currentBook.Title);
-    addAuthor(currentlyReading, currentBook.Author);
+    addBookTitleAndAuthor(currentlyReading, currentBook.Title, currentBook.Author );
 
     list.appendChild(currentlyReading);
     column.appendChild(list);
@@ -50,34 +49,32 @@ var Books = (function () {
     var imageUrl = "https://sites.google.com/site/andyparkhill/home/book-images/" + bookDetails.ISBN + ".jpg";
     image.setAttribute('src', imageUrl);
     image.setAttribute('alt', 'Book cover for ' + bookDetails.Title + ' by ' + bookDetails.Author);
-    image.setAttribute('width', '50px');
+    image.setAttribute('width', '60px');
     image.className = "left";
     element.appendChild(image);
   }
 
-  function addBookTitle(element, title) {
-    var bookTitle = document.createElement('p');
-    bookTitle.innerText = title;
-    bookTitle.style.fontSize = "12pt";
-    bookTitle.style.fontWeight = "Bold";
-    element.appendChild(bookTitle);
+  function addBookTitleAndAuthor(element, title, author) {
+    var text = document.createElement('p');
+    var boldTitle = document.createElement('b');
+    boldTitle.innerText = title;
+    text.appendChild(boldTitle);
+    text.innerHTML += " by " + author;
+    element.appendChild(text);
   }
 
-  function addAuthor(element, author) {
-    var authorDetails = document.createElement('p');
-    authorDetails.innerText = "by " + author;
-    element.appendChild(authorDetails);
-  }
-
-  function addDateRead(element, date, review) {
+  function addDateRead(element, date) {
     var dateRead = document.createElement('p');
     dateRead.innerText = "Finished reading on " + date;
-
-    if(review) {
-      dateRead.innerText += ". " + review;
-    }
-
     element.appendChild(dateRead);
+  }
+
+  function addReview(element, myReview) {
+    if(myReview != null) {
+      var review = document.createElement('p');
+      review.innerText = myReview;
+      element.appendChild(review);
+    }    
   }
 
   function addRating(element, rating) {
@@ -108,7 +105,6 @@ var Books = (function () {
       default:
         imageUrl = "";
         cell.innerText = "No rating";
-        console.log('Rating not set!');
     }
 
     if(imageUrl.length > 0) {
@@ -130,9 +126,9 @@ var Books = (function () {
       
       var div = document.createElement('div');
       div.className = "right";
-      addBookTitle(div, records[i].Title);
-      addAuthor(div, records[i].Author);
-      addDateRead(div, records[i].DateRead, records[i].MyReview);
+      addBookTitleAndAuthor(div, records[i].Title, records[i].Author );
+      addDateRead(div, records[i].DateRead);
+      addReview(div, records[i].MyReview);
       addRating(div, records[i].MyRating);
       element.appendChild(div);  
       list.appendChild(element);
@@ -157,7 +153,7 @@ var Books = (function () {
     });
 
     if(highlyRatedBooks.length > 0) {
-      addHeader(parentElement, "h4", classification);
+      addHeader(parentElement, "h3", "Recommended " + classification);
       var list = document.createElement('ul');
 
       var booksToDisplay = settings.numberOfRecommendedBooks;
@@ -175,9 +171,9 @@ var Books = (function () {
 
         var div = document.createElement('div');
         div.className = "right";
-        addBookTitle(div, highlyRatedBooks[i].Title);
-        addAuthor(div, highlyRatedBooks[i].Author);
+        addBookTitleAndAuthor(div, highlyRatedBooks[i].Title, highlyRatedBooks[i].Author );
         addDateRead(div, highlyRatedBooks[i].DateRead);
+        addReview(div, highlyRatedBooks[i].MyReview);
         addRating(div, highlyRatedBooks[i].MyRating); 
         element.appendChild(div);  
         list.appendChild(element);
@@ -185,27 +181,6 @@ var Books = (function () {
 
       parentElement.appendChild(list);
     } 
-  }
-
-  function buildRightColumn(content, records) {
-    var column = document.createElement('div');
-    column.className = "rightColumn"
-    
-    addHeader(column, "h3", "Highly Recommended", records);
-    addRecommendedBooks(column, "Fiction", records);
-    addRecommendedBooks(column, "Non-Fiction", records);
-
-    content.appendChild(column);
-  }
-
-  function buildLeftColumn(content, records) {
-    var column = document.createElement('div');
-    column.className = "leftColumn"
-
-    addCurrentlyReading(column, records[0]);
-    addRecentlyFinished(column, records);
-
-    content.appendChild(column);
   }
 
   function showInfo(data, tabletop) {
@@ -217,8 +192,10 @@ var Books = (function () {
 
     if(records.length > 0)
     {    
-      buildLeftColumn(content, records);
-      buildRightColumn(content, records);
+      addCurrentlyReading(content, records[0]);
+      addRecentlyFinished(content, records);
+      addRecommendedBooks(content, "Fiction", records);
+      addRecommendedBooks(content, "Non-Fiction", records);
     }
     else
     {
