@@ -148,8 +148,8 @@ var Books = (function () {
   }
 
   function addRecommendedBooks(parentElement, classification, records) {
-    var highlyRatedBooks = records.slice(10).filter(function(i) {
-      return i.MyRating === "5" && i.Classification === classification;
+    var highlyRatedBooks = records.slice(settings.numberOfRecentlyReadBooks + 1).filter(function(i) {
+      return (i.MyRating === "5" || i.MyRating === "4") && i.Classification === classification;
     });
 
     if(highlyRatedBooks.length > 0) {
@@ -183,6 +183,42 @@ var Books = (function () {
     } 
   }
 
+  function addBooksToAvoid(parentElement, records) {
+    var booksToAvoid = records.slice(settings.numberOfRecentlyReadBooks + 1).filter(function(i) {
+      return i.MyRating === "1";
+    });
+    
+    if(booksToAvoid.length > 0) {
+      addHeader(parentElement, "h3", "Books to Avoid");
+      var list = document.createElement('ul');
+
+      var booksToDisplay = settings.numberOfRecommendedBooks;
+      if(booksToDisplay > booksToAvoid.length) {
+        booksToDisplay = booksToAvoid.length;
+      }
+      else {
+        // Get random values from array to display
+        booksToAvoid = getRandomValuesFromArray(booksToAvoid, booksToDisplay);
+      }
+      
+      for (var i = 0; i < booksToDisplay; i++){
+        var element = document.createElement('li');  
+        addBookImage(element, booksToAvoid[i], i);
+
+        var div = document.createElement('div');
+        div.className = "right";
+        addBookTitleAndAuthor(div, booksToAvoid[i].Title, booksToAvoid[i].Author );
+        addDateRead(div, booksToAvoid[i].DateRead);
+        addReview(div, booksToAvoid[i].MyReview);
+        addRating(div, booksToAvoid[i].MyRating); 
+        element.appendChild(div);  
+        list.appendChild(element);
+      }
+
+      parentElement.appendChild(list);
+    } 
+  }
+
   function showInfo(data, tabletop) {
     var content = document.getElementById('content');
     removeChildNodes(content);
@@ -196,6 +232,7 @@ var Books = (function () {
       addRecentlyFinished(content, records);
       addRecommendedBooks(content, "Fiction", records);
       addRecommendedBooks(content, "Non-Fiction", records);
+      addBooksToAvoid(content, records);
     }
     else
     {
